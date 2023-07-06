@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TO DO LIST</title>
+    <style>
+      /* this line imports external fonts from Google Fonts....here the font is dancing script  */
+      /*The display=swap parameter is used to ensure that the text content is displayed with fallback fonts while the desired fonts are being loaded.*/
+      @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Lato:ital,wght@0,300;0,400;1,300;1,400&display=swap");
+      * {
+        margin: 0; /* margin is the space outside the border of an element */
+        padding: 0; /* padding is the space between the content of an element and its border */
+        outline: 0; /* outline is a line that is drawn around an element, typically used for visual styling or focus indication */
+        box-sizing: border-box; /*The box-sizing property defines how the width and height of an element are calculated. With "border-box", the total width and height of an element include the content, padding, and border.*/
+        -webkit-font-smoothing: antialiased; /*Antialiasing smooths the edges of fonts, making them appear clearer and more legible*/
+        user-select: none; /*Users will not be able to select and highlight text on the page*/
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      } /*We will also set the decoration to “none” and the color to “browser-inherited” using the element tag selector (a)*/
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        /*background-color: #f5f5f5;*/
+        background-color: #fad0d0;
+        font-family: "Lato", sans-serif;
+      }
+      #app {
+        width: 50%;
+        min-width: 400px;
+      }
+      h1 {
+        font-family: "Dancing Script", cursive;
+        text-align: center;
+        margin-bottom: 50px;
+        font-size: 60px;
+        /*color: #335c62; */
+        color: #ff004f;
+        font-weight: 2000;
+      }
+      p {
+        font-family: "Dancing Script", cursive;
+        text-align: center;
+        margin-top: 30px;
+        font-size: 30px;
+        color: #5c5c5c;
+        font-weight: 300;
+      }
+      ul {
+        font-family: "Lato", sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        font-style: italic;
+        margin: 70px;
+      }
+      ul li {
+        margin-bottom: 10px;
+        color: #242424;
+      }
+      ul li a {
+        margin-left: 15px;
+        color: white;
+        cursor: pointer;
+        /*border: 1px solid #7cbe7b;*/
+        /*border: 1px solid #bd5ad1;*/
+        border: 1px solid #3f8f9b;
+        border-radius: 5px;
+        padding: 0 15px 2px 15px;
+        /*background-color: #7cbe7b; */
+        /* background-color: #ce84dd;*/
+        background-color: #59a2ad;
+      }
+      ul li a:hover {
+        opacity: 0.7;
+      }
+      input,
+      button {
+        font: 400 20px "Lato", sans-serif;
+      }
+      input {
+        width: 60%;
+        height: 40px;
+        /*color: #5c5c5c;*/
+        color: #3f3e3e;
+
+        /* border: 1px solid #dcdce6;*/
+        border: 1px solid #9b9b9c;
+
+        border-radius: 8px;
+        padding: 0 24px;
+        margin-right: 10px;
+      }
+      .btn_add {
+        width: 30%;
+        height: 40px;
+        border: 1px solid #dcdce6;
+        border-radius: 8px;
+        background-color: #59a2ad;
+        color: #fff;
+        cursor: pointer;
+      }
+      .btn_add:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>To do list</h1>
+      <ul></ul>
+      <!-- it is empty bcz we will add new tasks to the list dynamically -->
+      <input type="text" placeholder="New task..." />
+      <button class="btn_add">Add</button>
+      <p>Insert a new task</p>
+    </div>
+
+    <script>
+      var listElement = document.querySelector("#app ul");
+      var inputElement = document.querySelector("#app input");
+      var buttonElement = document.querySelector("#app button");
+      var todos = JSON.parse(localStorage.getItem("list_todos")) || [];
+      function renderTodos() {
+        listElement.innerHTML = "";
+        for (todo of todos) {
+          var todoElement = document.createElement("li");
+          var todoText = document.createTextNode(todo);
+          var linkElement = document.createElement("a");
+          linkElement.setAttribute("href", "#");
+          var pos = todos.indexOf(todo);
+          linkElement.setAttribute("onclick", "deleteTodo(" + pos + ")");
+          var linkText = document.createTextNode("done");
+          linkElement.appendChild(linkText);
+          todoElement.appendChild(todoText);
+          todoElement.appendChild(linkElement);
+          listElement.appendChild(todoElement);
+        }
+      }
+      renderTodos();
+      function addTodo() {
+        var todoText = inputElement.value;
+        todos.push(todoText);
+        inputElement.value = "";
+        renderTodos();
+        saveToStorage();
+      }
+      buttonElement.onclick = addTodo;
+      function deleteTodo(pos) {
+        todos.splice(pos, 1);
+        renderTodos();
+        saveToStorage();
+      }
+      function saveToStorage() {
+        localStorage.setItem("list_todos", JSON.stringify(todos));
+      }
+    </script>
+  </body>
+</html>
